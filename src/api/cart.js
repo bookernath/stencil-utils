@@ -1,5 +1,6 @@
 import Base from './base';
 import Hooks from '../hooks';
+const queryString = require('query-string');
 
 export default class extends Base {
     /**
@@ -11,7 +12,10 @@ export default class extends Base {
     getCart(options = {}, callback) {
         let url = '/api/storefront/cart';
         if (options.includeOptions) {
-            url = `${url}?include=lineItems.physicalItems.options,lineItems.digitalItems.options`;
+            const qs = queryString.stringify(
+                { include: 'lineItems.physicalItems.options,lineItems.digitalItems.options' }
+                );
+            url = `${url}?${qs}`;
         }
         this.makeRequest(url, 'GET', {}, true, (err, response) => {
             callback(err, response);
@@ -39,6 +43,22 @@ export default class extends Base {
                 quantity = lineItemQuantities + giftCertificateQuantity;
             }
             callback(quantity);
+        });
+    }
+
+    /**
+     * Get any promotional messages that need to show on a given page, based on page type.
+     * For Product pages, specify the product ID to see specific promotions.
+     *
+     * @param options
+     * @param {Function} callback
+     */
+    getPromotionalNotifications(params = {}, callback) {
+        let url = '/api/storefront/promotion-notification';
+        const qs = queryString.stringify(params);
+        url = `${url}?${qs}`;
+        this.makeRequest(url, 'GET', {}, true, (err, response) => {
+            callback(err, response);
         });
     }
 
