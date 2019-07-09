@@ -1,10 +1,9 @@
-import EventEmitter from 'eventemitter2';
-import $ from 'jquery';
+import EventEmitter from 'eventemitter3';
 
 export default class extends EventEmitter {
     constructor() {
         super();
 
-        this.$body = $('body');
+        this.body = document.body;
     }
 }
