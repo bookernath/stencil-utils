@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from 'zepto';
 
 /**
  * Checks whether or not the current method passed in is valid
