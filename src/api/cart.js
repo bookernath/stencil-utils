@@ -60,25 +60,10 @@ export default class extends Base {
      * @param {Function} callback
      */
     getCartQuantity(options = {}, callback) {
-        this.getCart(options, (err, response) => {
-            if (err) {
-                return callback(err);
-            }
-            let quantity = 0;
-            if (response) {
-                const cart = response;
-                const lineItemQuantities = [
-                    cart.lineItems.physicalItems,
-                    cart.lineItems.digitalItems,
-                    cart.lineItems.customItems,
-                ].reduce((a, b) => a.concat(b))
-                    .filter((lineItem) => !lineItem.parentId)
-                    .map((lineItem) => lineItem.quantity)
-                    .reduce((accumulator, lineItemQuantity) => accumulator + lineItemQuantity, 0);
-                const giftCertificateQuantity = cart.lineItems.giftCertificates.length;
-                quantity = lineItemQuantities + giftCertificateQuantity;
-            }
-            callback(null, quantity);
+        let url = '/api/storefront/cart-summary';
+
+        this.makeRequest(url, 'GET', options, true, (err, response) => {
+            callback(err, "total_quantity" in response ? response.total_quantity : 0);
         });
     }
 
